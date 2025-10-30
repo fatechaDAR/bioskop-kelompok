@@ -1,5 +1,5 @@
 class AppRoutes {
   static const String login = '/login';
-  static const String home = '/home';
-  // Tambahkan rute lain di sini nanti (detail, booking, profile)
+  static const String register = '/register';
+  static const String home = '/home'; // <-- TAMBAHKAN INI
 }

@@ -1,49 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../core/utils/app_routes.dart';
+import '../../../core/utils/app_routes.dart'; // <-- PASTIKAN INI DI-IMPORT
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../core/theme/app_theme.dart';
 
 class LoginController extends GetxController {
-  // Gunakan TextEditingController untuk input
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  // Observabel untuk loading state
   final isLoading = false.obs;
 
   @override
   void onClose() {
-    // Selalu dispose controller saat tidak digunakan
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
   }
 
-  // Fungsi untuk login
   void login() async {
     isLoading.value = true;
 
-    // --- LOGIKA FIREBASE AUTH NANTI DI SINI ---
-    // try {
-    //   String email = emailController.text.trim();
-    //   String password = passwordController.text.trim();
-    //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-    //     email: email,
-    //     password: password,
-    //   );
-    //   Get.offAllNamed(AppRoutes.home); // Pindah ke Home setelah sukses
-    // } on FirebaseAuthException catch (e) {
-    //   Get.snackbar("Login Gagal", e.message ?? "Terjadi kesalahan");
-    // } finally {
-    //   isLoading.value = false;
-    // }
+    try {
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
 
-    // Simulasi login untuk sekarang
-    await Future.delayed(const Duration(seconds: 2));
-    print("Email: ${emailController.text}");
-    print("Password: ${passwordController.text}");
-    isLoading.value = false;
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    // Pindah ke halaman utama
-    Get.offAllNamed(AppRoutes.home);
+      // --- INI PERUBAHANNYA ---
+      // Jika sukses, pindah ke Home
+      Get.offAllNamed(AppRoutes.home);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'user-not-found' ||
+          e.code == 'wrong-password' ||
+          e.code == 'invalid-credential') {
+        errorMessage = 'Email atau password salah.';
+      } else {
+        errorMessage =
+            e.message ?? "Silakan cek kembali email & password Anda.";
+      }
+      Get.snackbar(
+        "Login Gagal",
+        errorMessage,
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Login Gagal",
+        "Terjadi kesalahan: ${e.toString()}",
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

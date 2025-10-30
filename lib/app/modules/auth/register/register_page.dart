@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'login_controller.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/app_routes.dart'; // <-- PASTIKAN INI DI-IMPORT
+import 'register_controller.dart';
 
-class LoginPage extends GetView<LoginController> {
-  const LoginPage({super.key});
+// --- INI PERBAIKANNYA (3 level ../) ---
+import '../../../core/theme/app_theme.dart';
+
+// (Kita tidak butuh app_routes.dart di sini karena Get.back() sudah built-in)
+
+class RegisterPage extends GetView<RegisterController> {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,108 +22,115 @@ class LoginPage extends GetView<LoginController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // 1. Judul Elegan
+                // 1. Judul
                 Text(
-                  "Cinema Noir",
+                  "Create Account",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.playfairDisplay(
-                    fontSize: 48,
+                    fontSize: 40,
                     fontWeight: FontWeight.w900,
-                    color: AppTheme.primaryGold,
+                    color: AppTheme.primaryGold, // <-- Ini butuh app_theme
                   ),
                 ),
                 Text(
-                  "An elegant movie experience.",
+                  "Join the Noir experience.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 16,
-                    color: AppTheme.lightText.withOpacity(0.7),
+                    color: AppTheme.lightText.withOpacity(
+                      0.7,
+                    ), // <-- Ini butuh app_theme
                   ),
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 50),
 
-                // 2. Form Email
+                // 2. Form Nama
+                TextField(
+                  controller: controller.nameController,
+                  keyboardType: TextInputType.name,
+                  textCapitalization: TextCapitalization.words,
+                  style: const TextStyle(
+                    color: AppTheme.lightText,
+                  ), // <-- Ini butuh app_theme
+                  decoration: const InputDecoration(
+                    labelText: "Full Name",
+                    prefixIcon: Icon(
+                      Icons.person_outline,
+                      color: AppTheme.primaryGold,
+                    ), // <-- Ini butuh app_theme
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // 3. Form Email
                 TextField(
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: AppTheme.lightText),
+                  style: const TextStyle(
+                    color: AppTheme.lightText,
+                  ), // <-- Ini butuh app_theme
                   decoration: const InputDecoration(
                     labelText: "Email",
                     prefixIcon: Icon(
                       Icons.email_outlined,
                       color: AppTheme.primaryGold,
-                    ),
+                    ), // <-- Ini butuh app_theme
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // 3. Form Password
+                // 4. Form Password
                 TextField(
                   controller: controller.passwordController,
                   obscureText: true,
-                  style: const TextStyle(color: AppTheme.lightText),
+                  style: const TextStyle(
+                    color: AppTheme.lightText,
+                  ), // <-- Ini butuh app_theme
                   decoration: const InputDecoration(
-                    labelText: "Password",
+                    labelText: "Password (Min. 6 characters)",
                     prefixIcon: Icon(
                       Icons.lock_outline,
                       color: AppTheme.primaryGold,
-                    ),
+                    ), // <-- Ini butuh app_theme
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 40),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Get.snackbar(
-                        "Fitur",
-                        "Fitur Lupa Password akan segera hadir!",
-                      );
-                    },
-                    child: Text(
-                      "Forgot Password?",
-                      style: GoogleFonts.poppins(color: AppTheme.primaryGold),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // 4. Tombol Login
+                // 5. Tombol Register
                 Obx(
                   () => controller.isLoading.value
                       ? const Center(
                           child: CircularProgressIndicator(
-                            color: AppTheme.primaryGold,
+                            color:
+                                AppTheme.primaryGold, // <-- Ini butuh app_theme
                           ),
                         )
                       : ElevatedButton(
-                          onPressed: controller.login,
-                          child: const Text("LOGIN"),
+                          onPressed: controller.register,
+                          child: const Text("REGISTER"),
                         ),
                 ),
                 const SizedBox(height: 40),
 
-                // 5. Pilihan Daftar (di-nonaktifkan sementara)
+                // 6. Pilihan Login
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      "Already have an account? ",
                       style: TextStyle(
                         color: AppTheme.lightText.withOpacity(0.7),
-                      ),
+                      ), // <-- Ini butuh app_theme
                     ),
                     GestureDetector(
                       onTap: () {
-                        // --- INI PERUBAHANNYA ---
-                        // Mengarahkan ke halaman Register
-                        Get.toNamed(AppRoutes.register);
+                        Get.back(); // Kembali ke halaman Login
                       },
                       child: const Text(
-                        "Sign Up",
+                        "Sign In",
                         style: TextStyle(
-                          color: AppTheme.primaryGold,
+                          color:
+                              AppTheme.primaryGold, // <-- Ini butuh app_theme
                           fontWeight: FontWeight.bold,
                         ),
                       ),

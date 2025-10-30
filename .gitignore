@@ -43,3 +43,28 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# File dan folder yang digenerasi oleh Flutter
+.dart_tool/
+.idea/
+.metadata
+.packages
+build/
+ios/
+android/
+
+# File spesifik OS
+.DS_Store
+
+# File build
+*.apk
+*.aab
+*.ipa
+
+# File sensitif (jika Anda menggunakan .env)
+.env
+
+# Konfigurasi Firebase (JANGAN PERNAH PUSH INI)
+google-services.json
+GoogleService-Info.plist
